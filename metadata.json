@@ -1,0 +1,6 @@
+{
+  "name": "Universal Business Onboarding Platform",
+  "description": "Scalable enterprise onboarding platform supporting dynamic form building, advanced KYC workflows, and n-tier hierarchical cluster management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

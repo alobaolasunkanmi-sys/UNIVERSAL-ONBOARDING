@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered app user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "driver"] }
+      },
+      "required": ["uid", "email"]
+    },
+    "Driver": {
+      "title": "Driver",
+      "description": "Logistics driver details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "vehicleId": { "type": "string" },
+        "licenseNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Suspended", "Terminated"] }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Logistics vehicle details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "plateNumber": { "type": "string" },
+        "driverId": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Shut Down", "Recovered", "Reassigned", "Sold", "Unassigned"] },
+        "weeklyPaymentDue": { "type": "number" },
+        "hirePurchaseTotal": { "type": "number" }
+      },
+      "required": ["id", "name", "plateNumber", "status"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Driver hire purchase payment submission",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "driverId": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Confirmed", "Rejected"] },
+        "receiptUrl": { "type": "string" }
+      },
+      "required": ["id", "driverId", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/drivers/{driverId}": {
+      "schema": { "$ref": "#/entities/Driver" },
+      "description": "Driver fleet collection"
+    },
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/Vehicle" },
+      "description": "Vehicle fleet collection"
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Driver payment records"
+    }
+  }
+}
