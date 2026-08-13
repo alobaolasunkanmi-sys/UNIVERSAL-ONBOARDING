@@ -3,19 +3,26 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 export interface Driver {
   id: string;
   name: string;
+  username?: string;
+  password?: string;
   address?: string;
   phone?: string;
   email?: string;
+  nin?: string;
+  licenseNumber?: string;
   idCardUrl?: string;
   licenseUrl?: string;
   vehicleId?: string;
   status: 'Active' | 'Suspended' | 'Terminated';
+  canLogin?: boolean;
+  mustChangePassword?: boolean;
 }
 
 export interface Vehicle {
   id: string;
   plateNumber: string;
   name: string;
+  type?: string;
   trackerId?: string;
   trackerSerialNumber?: string;
   status: 'Active' | 'Shut Down' | 'Recovered' | 'Reassigned' | 'Sold' | 'Unassigned';
@@ -50,14 +57,14 @@ interface LogisticsState {
 }
 
 const defaultDrivers: Driver[] = [
-  { id: 'DRV-001', name: 'Ibrahim Babangida', phone: '+234 803 123 4567', email: 'ibrahim@suntracomm.com', vehicleId: 'VEH-001', status: 'Active' },
-  { id: 'DRV-002', name: 'Chinedu Okafor', phone: '+234 802 987 6543', email: 'chinedu@suntracomm.com', vehicleId: 'VEH-002', status: 'Active' },
+  { id: 'DRV-001', name: 'Ibrahim Babangida', username: 'ibrahim', phone: '+234 803 123 4567', email: 'ibrahim@suntracomm.com', nin: '23456789012', vehicleId: 'VEH-001', status: 'Active', canLogin: true },
+  { id: 'DRV-002', name: 'Chinedu Okafor', username: 'chinedu', phone: '+234 802 987 6543', email: 'chinedu@suntracomm.com', nin: '34567890123', vehicleId: 'VEH-002', status: 'Active', canLogin: true },
 ];
 
 const defaultVehicles: Vehicle[] = [
-  { id: 'VEH-001', plateNumber: 'KJA-458-XY', name: 'Howo Dump Truck 30T', driverId: 'DRV-001', status: 'Active', hirePurchaseTotal: 25000000, weeklyPaymentDue: 150000 },
-  { id: 'VEH-002', plateNumber: 'LSD-892-AB', name: 'Shacman Tipper 20T', driverId: 'DRV-002', status: 'Active', hirePurchaseTotal: 18000000, weeklyPaymentDue: 120000 },
-  { id: 'VEH-003', plateNumber: 'GGE-112-ZZ', name: 'Foton Cargo Van', driverId: undefined, status: 'Unassigned', hirePurchaseTotal: 12000000, weeklyPaymentDue: 80000 },
+  { id: 'VEH-001', plateNumber: 'KJA-458-XY', name: 'Howo Dump Truck 30T', type: 'Heavy Truck', driverId: 'DRV-001', status: 'Active', hirePurchaseTotal: 25000000, weeklyPaymentDue: 150000 },
+  { id: 'VEH-002', plateNumber: 'LSD-892-AB', name: 'Shacman Tipper 20T', type: 'Tipper', driverId: 'DRV-002', status: 'Active', hirePurchaseTotal: 18000000, weeklyPaymentDue: 120000 },
+  { id: 'VEH-003', plateNumber: 'GGE-112-ZZ', name: 'Foton Cargo Van', type: 'Van', driverId: undefined, status: 'Unassigned', hirePurchaseTotal: 12000000, weeklyPaymentDue: 80000 },
 ];
 
 const defaultPayments: Payment[] = [

@@ -2,91 +2,254 @@ import React from 'react';
 import { 
   Building2, 
   LayoutDashboard, 
-  Files, 
-  Network, 
-  Settings, 
   ShieldCheck, 
   Users, 
   FileText,
-  Briefcase,
-  GitMerge,
-  Store,
-  PlusCircle
+  PlusCircle,
+  Truck,
+  CreditCard,
+  Key,
+  LogOut,
+  UserCheck,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onOpenAuthModal?: () => void;
 }
 
-export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'onboard', label: 'Onboard Business', icon: PlusCircle },
-    { id: 'applications', label: 'Applications (KYC)', icon: ShieldCheck },
-  ];
+export function Sidebar({ activeTab, setActiveTab, onOpenAuthModal }: SidebarProps) {
+  const { currentUser, businessOnboarding, logout } = useAuth();
 
-  const adminItems = [
-    { id: 'users', label: 'User Roles', icon: Users },
-    { id: 'docs', label: 'Documentation', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  const role = currentUser?.role || 'admin';
 
   return (
-    <div className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto">
-      <div className="p-6 flex items-center space-x-3 text-white">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-xl">U</div>
-        <span className="font-semibold text-lg tracking-tight">UniBoard</span>
+    <div className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen fixed left-0 top-0 overflow-y-auto border-r border-slate-800 z-20">
+      {/* Brand Header */}
+      <div className="p-6 flex items-center justify-between text-white border-b border-slate-800">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-600/30 text-white">
+            U
+          </div>
+          <div>
+            <span className="font-bold text-lg tracking-tight text-white block">UniBoard</span>
+            <span className="text-[10px] text-blue-400 font-semibold tracking-wide uppercase">
+              {businessOnboarding?.businessName || 'Logistics Portal'}
+            </span>
+          </div>
+        </div>
       </div>
-      
-      <div className="px-4 pb-4 flex-1">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4 px-2">Operations</div>
-        <nav className="space-y-1 mb-6">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                activeTab === item.id 
-                  ? "bg-blue-600 text-white" 
-                  : "hover:bg-slate-800 hover:text-white",
-                item.id === 'onboard' && activeTab !== 'onboard' ? "text-blue-400 font-semibold" : ""
-              )}
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
 
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-2">System</div>
-        <nav className="space-y-1">
-          {adminItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                activeTab === item.id 
-                  ? "bg-blue-600 text-white" 
-                  : "hover:bg-slate-800 hover:text-white"
-              )}
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
+      {/* User Role Card */}
+      <div className="p-4 bg-slate-800/60 mx-3 my-3 rounded-xl border border-slate-700/60 flex items-center justify-between">
+        <div className="flex items-center space-x-2.5 overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 font-bold text-xs flex items-center justify-center shrink-0 border border-blue-500/30">
+            {currentUser?.name ? currentUser.name.slice(0, 2).toUpperCase() : 'AD'}
+          </div>
+          <div className="truncate">
+            <div className="text-xs font-bold text-white truncate">{currentUser?.name || 'Administrator'}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-semibold flex items-center space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+              <span>{role} Portal</span>
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div className="mt-auto p-4 shrink-0">
-        <div className="bg-slate-800 rounded-lg p-4">
-          <div className="text-sm font-medium text-white">System Status</div>
-          <div className="flex items-center space-x-2 mt-2">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span className="text-xs text-slate-400">All systems operational</span>
+      {/* Navigation Sections */}
+      <div className="px-3 pb-4 flex-1 space-y-6">
+        {/* Core Operations Section */}
+        <div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
+            Client Showcase & Operations
+          </div>
+          <nav className="space-y-1">
+            <button
+              onClick={() => setActiveTab('demo')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border border-amber-500/20",
+                activeTab === 'demo' 
+                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30 font-bold" 
+                  : "bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
+              )}
+            >
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Client Demo & Pitch Wizard</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'dashboard' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <LayoutDashboard className="w-4 h-4 text-blue-400" />
+              <span>Logistics Dashboard</span>
+            </button>
+
+            {(role === 'admin' || role === 'staff') && (
+              <button
+                onClick={() => setActiveTab('vehicles')}
+                className={cn(
+                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                  activeTab === 'vehicles' 
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                )}
+              >
+                <Truck className="w-4 h-4 text-emerald-400" />
+                <span>Vehicle & Fleet Management</span>
+              </button>
+            )}
+
+            {(role === 'admin' || role === 'staff') && (
+              <button
+                onClick={() => setActiveTab('drivers')}
+                className={cn(
+                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                  activeTab === 'drivers' 
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                )}
+              >
+                <Users className="w-4 h-4 text-amber-400" />
+                <span>Drivers & Credentials</span>
+              </button>
+            )}
+
+            {(role === 'admin' || role === 'staff') && (
+              <button
+                onClick={() => setActiveTab('income')}
+                className={cn(
+                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                  activeTab === 'income' 
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                )}
+              >
+                <CreditCard className="w-4 h-4 text-green-400" />
+                <span>Income & Payment Receipts</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => setActiveTab('driver-portal')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'driver-portal' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <UserCheck className="w-4 h-4 text-sky-400" />
+              <span>Driver Portal</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* Business Onboarding Section */}
+        <div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
+            Onboarding & Verification
+          </div>
+          <nav className="space-y-1">
+            <button
+              onClick={() => setActiveTab('onboard')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'onboard' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <Building2 className="w-4 h-4 text-cyan-400" />
+              <span>Business Onboarding</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('wizard')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'wizard' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <PlusCircle className="w-4 h-4 text-pink-400" />
+              <span>Onboarding Wizard</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('applications')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'applications' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <ShieldCheck className="w-4 h-4 text-indigo-400" />
+              <span>KYC & Business Verification</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* Platform & RBAC Section */}
+        <div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
+            System & Security
+          </div>
+          <nav className="space-y-1">
+            <button
+              onClick={() => setActiveTab('users')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'users' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <Users className="w-4 h-4 text-purple-400" />
+              <span>User Roles & RBAC</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('docs')}
+              className={cn(
+                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
+                activeTab === 'docs' 
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+              )}
+            >
+              <FileText className="w-4 h-4 text-slate-400" />
+              <span>System Documentation</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+      
+      {/* Footer System Status & Auth */}
+      <div className="mt-auto p-3 shrink-0 border-t border-slate-800 space-y-2">
+        <button
+          onClick={onOpenAuthModal}
+          className="w-full py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 font-semibold text-xs flex items-center justify-center space-x-2 transition-all"
+        >
+          <Key className="w-3.5 h-3.5" />
+          <span>Switch User / Portal Login</span>
+        </button>
+
+        <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-800">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-semibold text-white">Database</span>
+            <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-bold">Cloud SQL</span>
           </div>
         </div>
       </div>
