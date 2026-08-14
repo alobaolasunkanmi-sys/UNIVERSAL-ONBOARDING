@@ -19,7 +19,7 @@ import { Users, Settings, ShieldCheck, Building2, Lock, UserCheck, Key } from 'l
 import { Application, ApplicationStatus } from './types';
 
 function MainAppContent() {
-  const [activeTab, setActiveTab] = useState('demo');
+  const [activeTab, setActiveTab] = useState('onboard');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [impersonatingApp, setImpersonatingApp] = useState<Application | null>(null);
   const { currentUser } = useAuth();
@@ -117,7 +117,12 @@ function MainAppContent() {
       case 'driver-portal':
         return <DriverPortal />;
       case 'onboard':
-        return <BusinessOnboardingView />;
+        return (
+          <BusinessOnboardingView 
+            onNavigateTab={(tab) => setActiveTab(tab)}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        );
       case 'wizard':
         return (
           <OnboardingWizard 

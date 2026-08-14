@@ -62,102 +62,10 @@ export function Sidebar({ activeTab, setActiveTab, onOpenAuthModal }: SidebarPro
       
       {/* Navigation Sections */}
       <div className="px-3 pb-4 flex-1 space-y-6">
-        {/* Core Operations Section */}
+        {/* Business Categories & Onboarding Section */}
         <div>
           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
-            Client Showcase & Operations
-          </div>
-          <nav className="space-y-1">
-            <button
-              onClick={() => setActiveTab('demo')}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border border-amber-500/20",
-                activeTab === 'demo' 
-                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30 font-bold" 
-                  : "bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
-              )}
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Client Demo & Pitch Wizard</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
-                activeTab === 'dashboard' 
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
-              )}
-            >
-              <LayoutDashboard className="w-4 h-4 text-blue-400" />
-              <span>Logistics Dashboard</span>
-            </button>
-
-            {(role === 'admin' || role === 'staff') && (
-              <button
-                onClick={() => setActiveTab('vehicles')}
-                className={cn(
-                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
-                  activeTab === 'vehicles' 
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
-                )}
-              >
-                <Truck className="w-4 h-4 text-emerald-400" />
-                <span>Vehicle & Fleet Management</span>
-              </button>
-            )}
-
-            {(role === 'admin' || role === 'staff') && (
-              <button
-                onClick={() => setActiveTab('drivers')}
-                className={cn(
-                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
-                  activeTab === 'drivers' 
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
-                )}
-              >
-                <Users className="w-4 h-4 text-amber-400" />
-                <span>Drivers & Credentials</span>
-              </button>
-            )}
-
-            {(role === 'admin' || role === 'staff') && (
-              <button
-                onClick={() => setActiveTab('income')}
-                className={cn(
-                  "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
-                  activeTab === 'income' 
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                    : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
-                )}
-              >
-                <CreditCard className="w-4 h-4 text-green-400" />
-                <span>Income & Payment Receipts</span>
-              </button>
-            )}
-
-            <button
-              onClick={() => setActiveTab('driver-portal')}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all",
-                activeTab === 'driver-portal' 
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
-              )}
-            >
-              <UserCheck className="w-4 h-4 text-sky-400" />
-              <span>Driver Portal</span>
-            </button>
-          </nav>
-        </div>
-
-        {/* Business Onboarding Section */}
-        <div>
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
-            Onboarding & Verification
+            Company Onboarding & Workspaces
           </div>
           <nav className="space-y-1">
             <button
@@ -170,7 +78,7 @@ export function Sidebar({ activeTab, setActiveTab, onOpenAuthModal }: SidebarPro
               )}
             >
               <Building2 className="w-4 h-4 text-cyan-400" />
-              <span>Business Onboarding</span>
+              <span>Business Category Hub</span>
             </button>
 
             <button
@@ -204,7 +112,7 @@ export function Sidebar({ activeTab, setActiveTab, onOpenAuthModal }: SidebarPro
         {/* Platform & RBAC Section */}
         <div>
           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">
-            System & Security
+            Role & Access Controls
           </div>
           <nav className="space-y-1">
             <button
@@ -217,7 +125,7 @@ export function Sidebar({ activeTab, setActiveTab, onOpenAuthModal }: SidebarPro
               )}
             >
               <Users className="w-4 h-4 text-purple-400" />
-              <span>User Roles & RBAC</span>
+              <span>User Roles & RBAC Matrix</span>
             </button>
 
             <button
