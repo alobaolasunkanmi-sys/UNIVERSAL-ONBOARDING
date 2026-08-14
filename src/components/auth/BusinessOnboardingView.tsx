@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { isSupabaseConfigured } from '../../lib/supabase';
 import { 
   Building2, 
   CheckCircle2, 
@@ -22,7 +23,8 @@ import {
   ChevronRight,
   Sparkles,
   Key,
-  LayoutDashboard
+  LayoutDashboard,
+  Database
 } from 'lucide-react';
 import { LogisticsDashboard } from '../modules/logistics/LogisticsDashboard';
 import { VehicleManagement } from '../modules/logistics/VehicleManagement';
@@ -246,75 +248,6 @@ export function BusinessOnboardingView({ onNavigateTab, onOpenAuthModal }: Busin
         </div>
       </div>
 
-      {/* Interactive Business Categories Onboarding Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">Select Business Category to Onboard</h2>
-            <p className="text-xs text-slate-500">Click on any category below to select it for company onboarding and launch its workspace.</p>
-          </div>
-          <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-            6 Industry Sector Categories Available
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((cat) => {
-            const IconComponent = cat.icon;
-            const isSelected = selectedCategory === cat.id;
-
-            return (
-              <div
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative group flex flex-col justify-between ${cat.color} ${
-                  isSelected ? 'ring-2 ring-blue-600 border-blue-600 shadow-md' : 'border-slate-200/80 hover:shadow-sm'
-                }`}
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className={`p-3 rounded-xl ${isSelected ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}>
-                      <IconComponent className="w-6 h-6" />
-                    </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                      isSelected ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-200/60 text-slate-700 border-slate-300/60'
-                    }`}>
-                      {cat.badge}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm flex items-center space-x-1.5">
-                      <span>{cat.name}</span>
-                      {isSelected && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
-                    </h3>
-                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">{cat.desc}</p>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs font-semibold">
-                  <span className={isSelected ? 'text-blue-700 font-bold' : 'text-slate-500'}>
-                    {isSelected ? '✓ Selected for Onboarding' : 'Click to Select Category'}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCategory(cat.id);
-                      setActiveWorkspaceView('dashboard');
-                    }}
-                    className="text-blue-600 hover:text-blue-800 flex items-center space-x-1 text-[11px] font-bold underline"
-                  >
-                    <span>Launch Workspace</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Onboarding Application Form & Admin Profile */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
         {/* Onboarding Application Form */}
@@ -503,7 +436,42 @@ export function BusinessOnboardingView({ onNavigateTab, onOpenAuthModal }: Busin
             )}
           </div>
 
-          {/* Onboarding Workflow Steps */}
+          {/* Supabase Status Card */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-3">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center justify-between">
+              <span className="flex items-center space-x-2">
+                <Database className="w-4 h-4 text-emerald-600" />
+                <span>Supabase Database Engine</span>
+              </span>
+              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                isSupabaseConfigured ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+              }`}>
+                {isSupabaseConfigured ? 'Live SDK Ready' : 'SDK Installed'}
+              </span>
+            </h3>
+
+            <p className="text-xs text-slate-600 leading-relaxed">
+              {isSupabaseConfigured
+                ? 'Your app is configured with the official @supabase/supabase-js client SDK.'
+                : 'The @supabase/supabase-js SDK is installed. Define VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables to enable live Cloud PostgreSQL synchronization.'}
+            </p>
+
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-mono space-y-1">
+              <div className="text-slate-500 font-sans font-bold">Configured Environment Keys:</div>
+              <div className="flex justify-between">
+                <span>VITE_SUPABASE_URL:</span>
+                <span className={isSupabaseConfigured ? 'text-emerald-700 font-bold' : 'text-slate-400'}>
+                  {isSupabaseConfigured ? '✓ Set' : 'Pending'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>VITE_SUPABASE_ANON_KEY:</span>
+                <span className={isSupabaseConfigured ? 'text-emerald-700 font-bold' : 'text-slate-400'}>
+                  {isSupabaseConfigured ? '✓ Set' : 'Pending'}
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-2xl p-6 shadow-lg">
             <h3 className="text-sm font-bold mb-3">Onboarding Workflow</h3>
             <ul className="space-y-3 text-xs text-slate-300">

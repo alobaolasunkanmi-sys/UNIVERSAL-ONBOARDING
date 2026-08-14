@@ -24,7 +24,7 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'signup' | 'driver-setup';
 }
 
-export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab = 'login' }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab = 'signup' }: AuthModalProps) {
   const { login, adminSignUp, driverSetupPassword, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<'login' | 'signup' | 'driver-setup'>(defaultTab);
   const [selectedRole, setSelectedRole] = useState<UserRole>(defaultRole);
@@ -86,8 +86,8 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
     setErrorMessage('');
     setSuccessMessage('');
 
-    if (!adminName || !adminPhone || !adminNin || !adminUsername || !adminPassword) {
-      setErrorMessage('Please fill in all required fields: Name, Phone, NIN, Username, and Password.');
+    if (!adminName || !adminPhone || !adminUsername || !adminPassword) {
+      setErrorMessage('Please fill in required fields: Name, Phone, Username, and Password.');
       return;
     }
 
@@ -173,15 +173,6 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
           {/* Mode Switcher Tabs */}
           <div className="grid grid-cols-3 gap-1 bg-slate-800/80 p-1 rounded-xl mt-6 text-xs font-semibold">
             <button
-              onClick={() => { setActiveTab('login'); setErrorMessage(''); }}
-              className={`py-2 px-3 rounded-lg flex items-center justify-center space-x-1.5 transition-all ${
-                activeTab === 'login' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In</span>
-            </button>
-            <button
               onClick={() => { setActiveTab('signup'); setErrorMessage(''); }}
               className={`py-2 px-3 rounded-lg flex items-center justify-center space-x-1.5 transition-all ${
                 activeTab === 'signup' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
@@ -189,6 +180,15 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Admin Sign Up</span>
+            </button>
+            <button
+              onClick={() => { setActiveTab('login'); setErrorMessage(''); }}
+              className={`py-2 px-3 rounded-lg flex items-center justify-center space-x-1.5 transition-all ${
+                activeTab === 'login' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
             </button>
             <button
               onClick={() => { setActiveTab('driver-setup'); setErrorMessage(''); }}
@@ -221,27 +221,27 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
           {/* 1. LOGIN TAB */}
           {activeTab === 'login' && (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-xs flex items-center justify-between text-amber-900 font-medium">
+              <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between text-amber-900 font-medium gap-2">
                 <span>⚡ Quick Demo Presets:</span>
-                <div className="flex space-x-1.5">
+                <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
-                    onClick={() => { setSelectedRole('admin'); setUsernameOrEmail('admin'); setLoginPassword('admin123'); }}
-                    className="px-2 py-1 bg-amber-200 hover:bg-amber-300 rounded text-[10px] font-bold"
+                    onClick={() => { setSelectedRole('superadmin'); setUsernameOrEmail('admin'); setLoginPassword('adminpassword123'); }}
+                    className="px-2 py-1 bg-purple-200 hover:bg-purple-300 text-purple-900 rounded text-[10px] font-bold"
                   >
-                    Admin
+                    Super Admin
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setSelectedRole('staff'); setUsernameOrEmail('staff'); setLoginPassword('staff123'); }}
-                    className="px-2 py-1 bg-amber-200 hover:bg-amber-300 rounded text-[10px] font-bold"
+                    onClick={() => { setSelectedRole('admin'); setUsernameOrEmail('chinedu_admin'); setLoginPassword('admin123'); }}
+                    className="px-2 py-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded text-[10px] font-bold"
                   >
-                    Staff
+                    Reg Admin
                   </button>
                   <button
                     type="button"
                     onClick={() => { setSelectedRole('driver'); setUsernameOrEmail('ibrahim'); setLoginPassword('driver123'); }}
-                    className="px-2 py-1 bg-amber-200 hover:bg-amber-300 rounded text-[10px] font-bold"
+                    className="px-2 py-1 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded text-[10px] font-bold"
                   >
                     Driver
                   </button>
@@ -252,10 +252,10 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Select Portal Role</label>
                 <div className="grid grid-cols-4 gap-2">
                   {[
-                    { id: 'admin', label: 'Admin', icon: Building2 },
-                    { id: 'staff', label: 'Staff', icon: ShieldCheck },
+                    { id: 'superadmin', label: 'Super Admin', icon: ShieldCheck },
+                    { id: 'admin', label: 'Reg Admin', icon: Building2 },
+                    { id: 'staff', label: 'Staff', icon: UserCheck },
                     { id: 'driver', label: 'Driver', icon: Truck },
-                    { id: 'user', label: 'User', icon: UserCheck },
                   ].map((r) => (
                     <button
                       key={r.id}
@@ -369,15 +369,14 @@ export function AuthModal({ isOpen, onClose, defaultRole = 'admin', defaultTab =
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">National ID Number (NIN) *</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">National ID Number (NIN) (Optional)</label>
                   <div className="relative">
                     <Hash className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
                     <input
                       type="text"
-                      required
                       value={adminNin}
                       onChange={(e) => setAdminNin(e.target.value)}
-                      placeholder="11-digit NIN"
+                      placeholder="Optional 11-digit NIN"
                       className="w-full pl-8 pr-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                     />
                   </div>

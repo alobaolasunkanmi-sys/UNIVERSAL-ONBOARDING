@@ -1,4 +1,26 @@
-export type ApplicationStatus = 'Pending' | 'In Review' | 'Approved' | 'Rejected' | 'Returned';
+export type ApplicationStatus = 'Pending' | 'In Review' | 'Under Review' | 'Approved' | 'Rejected' | 'Returned';
+
+export type UserRole = 'superadmin' | 'admin' | 'staff' | 'driver' | 'user';
+
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  businessId?: string;
+}
+
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  actorId: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  target: string;
+  details: string;
+  ipAddress?: string;
+}
 
 export interface Application {
   id: string;
@@ -10,7 +32,8 @@ export interface Application {
   riskScore: number;
   email?: string;
   phone?: string;
-  documents?: { type: string; name: string }[];
+  registeredByUserId?: string;
+  documents?: { id?: string; type: string; name: string; url?: string; uploadedAt?: string; verified?: boolean }[];
   details?: Record<string, any>;
 }
 

@@ -161,8 +161,8 @@ async function startServer() {
     try {
       const { name, phone, nin, username, email, password, businessName, businessType } = req.body;
 
-      if (!name || !phone || !nin || !username || !password) {
-        return res.status(400).json({ error: "Missing required fields: Name, Phone, NIN, Username, and Password are required." });
+      if (!name || !phone || !username || !password) {
+        return res.status(400).json({ error: "Missing required fields: Name, Phone, Username, and Password are required." });
       }
 
       // Check if username already exists in accounts or drivers
@@ -178,7 +178,7 @@ async function startServer() {
         password: password,
         name: name.trim(),
         phone: phone.trim(),
-        nin: nin.trim(),
+        nin: nin ? nin.trim() : '',
         email: email ? email.trim() : `${username}@business.com`,
         role: 'admin',
         canLogin: true,
@@ -461,6 +461,17 @@ async function startServer() {
     } catch (error: any) {
       console.error("Error applying for business onboarding:", error);
       res.status(500).json({ error: "Failed to submit business onboarding application." });
+    }
+  });
+
+  // Get All Business Onboarding Records (Super Admin)
+  app.get("/api/onboarding/all", async (req, res) => {
+    try {
+      const records = await db.select().from(businessOnboardings);
+      res.json(records);
+    } catch (error: any) {
+      console.error("Failed to fetch all onboardings:", error);
+      res.status(500).json({ error: "Failed to fetch all onboardings." });
     }
   });
 

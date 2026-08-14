@@ -37,7 +37,7 @@ interface AuthContextType {
   adminSignUp: (data: {
     name: string;
     phone: string;
-    nin: string;
+    nin?: string;
     username: string;
     email?: string;
     password: string;
@@ -146,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const adminSignUp = async (data: {
     name: string;
     phone: string;
-    nin: string;
+    nin?: string;
     username: string;
     email?: string;
     password: string;
