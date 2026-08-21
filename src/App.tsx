@@ -106,7 +106,15 @@ function MainAppContent() {
   useEffect(() => {
     if (currentUser?.role === 'superadmin') {
       fetch('/api/onboarding/all')
-        .then(res => res.json())
+        .then(async (res) => {
+          if (!res.ok) throw new Error("Server returned " + res.status);
+          const contentType = res.headers.get('content-type');
+          if (contentType && contentType.indexOf('application/json') !== -1) {
+            return res.json();
+          } else {
+            throw new Error("Expected JSON, got " + contentType);
+          }
+        })
         .then((data: any[]) => {
           if (Array.isArray(data) && data.length > 0) {
             setApplications(prev => {
@@ -435,6 +443,42 @@ function MainAppContent() {
         return <LogisticsDashboard />;
     }
   };
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"></div>
+        
+        <div className="relative z-10 w-full max-w-md px-6 text-center space-y-8">
+          <div className="mx-auto w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-600/20 mb-8">
+            <Building2 className="w-10 h-10 text-white" />
+          </div>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Universal Business Portal</h1>
+            <p className="text-slate-600 text-lg">Sign in or register your account to access the onboarding and management dashboard.</p>
+          </div>
+          
+          <div className="pt-8 space-y-4">
+            <button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center space-x-2 text-lg"
+            >
+              <Key className="w-5 h-5" />
+              <span>Sign In / Sign Up</span>
+            </button>
+          </div>
+        </div>
+
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
